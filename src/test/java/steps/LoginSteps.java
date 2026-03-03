@@ -41,7 +41,13 @@ public class LoginSteps extends BaseUI {
     public void verify_user_signed_in_successfully() {
         waitUntilVisible(20, dashboardPage.welcomeSign);
         Assertions.assertTrue(dashboardPage.welcomeSign.isDisplayed());
-       waitAndClick(dashboardPage.logoutButton);
+        waitAndClick(dashboardPage.logoutButton);
+    }
+
+    @Then("verify user failed to sign in")
+    public void verify_user_failed_to_sign_in() throws InterruptedException {
+        Thread.sleep(1000);
+        Assertions.assertTrue(driver.getCurrentUrl().contains("/login"));
     }
 
 }
