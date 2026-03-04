@@ -33,7 +33,7 @@ public class LoginSteps extends BaseUI {
     }
 
     @When("user clicks on sign in button")
-    public void user_clicks_on_sign_in_button() {
+    public void udsvsdv() {
         waitAndClick(loginPage.signInButton);
     }
 

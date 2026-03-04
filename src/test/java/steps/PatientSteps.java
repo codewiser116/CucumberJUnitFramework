@@ -6,11 +6,13 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import pages.LoginPage;
 import pages.PatientsPage;
 import utils.BaseUI;
 import utils.Driver;
 
 import java.util.List;
+import java.util.Map;
 
 public class PatientSteps extends BaseUI {
 
@@ -46,5 +48,25 @@ public class PatientSteps extends BaseUI {
                 Assertions.assertTrue(actualGender.getText().equalsIgnoreCase(gender));
             }
         }
+    }
+
+    @When("user clicks on New Patient button")
+    public void user_clicks_on_new_patient_button() {
+        // add code which clicks on new patient
+    }
+
+    @When("user fills the form with following data")
+    public void user_fills_the_form_with_following_data(DataTable dataTable) {
+      Map<String, String> patientInfo = dataTable.asMap(String.class, String.class);
+    }
+
+    @When("user clicks on Create Patient button")
+    public void user_clicks_on_create_patient_button() {
+
+    }
+
+    @Then("verify new patient was created")
+    public void verify_new_patient_was_created() {
+
     }
 }
