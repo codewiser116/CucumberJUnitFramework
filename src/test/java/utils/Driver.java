@@ -17,14 +17,19 @@ public class Driver {
     WebDriver driver = new ChromeDriver();
     WebDriver driver = Driver.getDriver()
      */
-    static WebDriver driver;
+    public static WebDriver driver;
 
     public static WebDriver getDriver(){
 
         String browser = ConfigurationReader.getProperty("browser");
 
         if (driver != null) {
-            return driver;
+            try {
+                driver.getTitle(); // any lightweight command
+                return driver;
+            } catch (Exception ignored) {
+                closeDriver(); // session is dead
+            }
         }
 
         ChromeOptions options = new ChromeOptions();
@@ -67,5 +72,15 @@ public class Driver {
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
 
         return driver;
+    }
+
+    public static void closeDriver() {
+        if (driver != null) {
+            try {
+                driver.quit();
+            } finally {
+                driver = null;
+            }
+        }
     }
 }

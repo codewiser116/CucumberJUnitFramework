@@ -51,22 +51,36 @@ public class PatientSteps extends BaseUI {
     }
 
     @When("user clicks on New Patient button")
-    public void user_clicks_on_new_patient_button() {
-        // add code which clicks on new patient
+    public void user_clicks_on() {
+        waitAndClick(patientsPage.newPatientButton);
     }
 
+    private Map<String, String> patientInfo;
+
+
     @When("user fills the form with following data")
-    public void user_fills_the_form_with_following_data(DataTable dataTable) {
-      Map<String, String> patientInfo = dataTable.asMap(String.class, String.class);
+    public void user_fills_the_form_with_following_data(io.cucumber.datatable.DataTable dataTable) {
+        this.patientInfo = dataTable.asMap(String.class, String.class);
+
+        waitAndSendKeys(patientsPage.firstNameInput, patientInfo.get("firstName"));
+        waitAndSendKeys(patientsPage.lastNameInput, patientInfo.get("lastName"));
+        waitAndSendKeys(patientsPage.dobInput, patientInfo.get("dob"));
+        patientsPage.selectGenderForNewPatient(patientInfo.get("gender"));
+        waitAndSendKeys(patientsPage.phoneInput, patientInfo.get("phone"));
     }
 
     @When("user clicks on Create Patient button")
     public void user_clicks_on_create_patient_button() {
-
+        waitAndClick(patientsPage.createPatientButton);
     }
 
     @Then("verify new patient was created")
-    public void verify_new_patient_was_created() {
+    public void verify_new_patient_was_created() throws InterruptedException {
+        String firstName = this.patientInfo.get("firstName");
 
+        Thread.sleep(2000);
+        waitAndSendKeys(patientsPage.searchPatientInput, firstName);
+
+        Assertions.assertTrue(patientsPage.isNamePresentInTable(firstName));
     }
 }

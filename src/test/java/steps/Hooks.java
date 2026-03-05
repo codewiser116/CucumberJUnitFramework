@@ -1,17 +1,21 @@
 package steps;
 
 import io.cucumber.java.*;
+import pages.DashboardPage;
+import utils.BaseUI;
+import utils.ConfigurationReader;
+import utils.Driver;
 
-public class Hooks {
+public class Hooks extends BaseUI {
 
-    @Before // runs before each scenario
+    @Before
     public void setup(){
-        System.out.println("this is before scenario");
+        Driver.getDriver().get(ConfigurationReader.getProperty("loginURL"));
     }
 
     @After // runs after each scenario
     public void cleanup(){
-        System.out.println("this is after scenario");
+        waitAndClick(new DashboardPage().logoutButton);
     }
 
     @BeforeAll
