@@ -24,3 +24,4 @@ Feature: test List Patients and Get Patient by id
     And user provided query param "pageSize" with value "5"
     When user hits GET "/api-patients"
     Then verify status code is 200
+
