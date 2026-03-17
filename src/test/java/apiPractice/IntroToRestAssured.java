@@ -78,6 +78,20 @@ public class IntroToRestAssured {
         System.out.println("RESPONSE BODY" + response.asPrettyString());
     }
 
+    @Test
+    public void testGetAppointments(){
+        RequestSpecification request = RestAssured
+                .given().baseUri("https://jvjdarxnrsqkkhkeotkc.supabase.co/functions/v1")
+                .header("Authorization", "Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IjgwZGVjODU2LTQ2ZDktNGJhYy1hNDc4LTY4YzQ0ZTc2NWU4YSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2p2amRhcnhucnNxa2toa2VvdGtjLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJjMzEzZGIxNi01ZDc1LTRhOGYtODc4MS04OTdjYjExNzUzMDAiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzczNzY2NjYxLCJpYXQiOjE3NzM3NjMwNjEsImVtYWlsIjoiZHIub3Ntb25hbGlldmFAbWVkaWZsb3cuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NzM3NjMwNjF9XSwic2Vzc2lvbl9pZCI6Ijc3OWU3NTc0LWI1YTMtNDI4Ny1iNmUwLTQxZGU2YWViMTkzNyIsImlzX2Fub255bW91cyI6ZmFsc2V9.lJJNNH2sUIfOL9AaxPHXwfhkL7HC2kEYscxMzdvsZ9Y2lkMTI8HNCFi945IeWAZchshHImVRf5-yp-jRN4ALDQ")
+                .queryParam("page", 2)
+                .queryParam("pageSize", 10)
+                .queryParam("status", "Cancelled");
+
+
+        Response response = request.get("/api-appointments");
+        System.out.println("Status code: " + response.statusCode());
+        System.out.println("Response body: " + response.asPrettyString());
+    }
 
 
 
