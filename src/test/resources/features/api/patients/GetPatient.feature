@@ -6,6 +6,7 @@ Feature: test List Patients and Get Patient by id
     And user has valid authorization
     When user hits GET "/api-patients"
     Then verify status code is 200
+    Then verify the number of patients is <= 25
 
     @getPatientsUnauthorized
   Scenario: verify unauthorized user cannot get list of patients
