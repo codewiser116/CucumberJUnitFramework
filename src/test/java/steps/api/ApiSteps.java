@@ -15,6 +15,7 @@ import utils.APIUtils;
 import utils.ConfigurationReader;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -32,15 +33,14 @@ public class ApiSteps extends APIUtils {
                 .contentType(ContentType.JSON);
     }
 
-    @Given("user has valid authorization")
-    public void user_has_valid_authorization() {
-        request = request.header("Authorization", "Bearer " + getToken());
+    @Given("{string} has valid authorization")
+    public void has_valid_authorization(String userType) {
+        request = request.header("Authorization", "Bearer " + getToken(userType));
     }
 
     @Given("user has invalid authorization")
     public void user_has_invalid_authorization() {
         request = request.header("Authorization", "Bearer invalidTokenM6Ip8Lyg5MEpyzVVHVA");
-
     }
 
     @When("user hits GET {string}")
@@ -106,10 +106,54 @@ public class ApiSteps extends APIUtils {
         request = request.body(requestBody.toString());
     }
 
+    @Given("user adds following data in request body")
+    public void user_adds_following_data_in_request_body(io.cucumber.datatable.DataTable dataTable) {
+        Map<String, String> map = dataTable.asMap();
+
+        for (String key : map.keySet()){
+            requestBody.put(key, map.get(key));
+        }
+
+        request = request.body(requestBody.toString());
+    }
+
+    @Given("user provides valid appointment date and time")
+    public void user_provides_valid_appointment_date_and_time() {
+        String [] appointmentDateAndTime = getStartEndTimeForAppointment();
+        String startTime = appointmentDateAndTime[0];
+        String endTime = appointmentDateAndTime[1];
+
+        requestBody.put("datetime_start", startTime);
+        requestBody.put("datetime_end", endTime);
+
+        request = request.body(requestBody.toString());
+    }
+
+
     @Given("user hits POST {string}")
     public void user_hits_post(String endpoint) {
         response = request.post(endpoint);
         System.out.println(response.asPrettyString());
     }
+
+
+    @Then("clean up by cancelling the appointment")
+    public void clean_up_by_cancelling_the_appointment() {
+        Appointment appointment = response.as(Appointment.class);
+        String appointmentId = appointment.getAppointment_id();
+
+        requestBody.put("cancellationReason", "clean up");
+
+        RestAssured.given().baseUri(ConfigurationReader.getProperty("apiBaseURL"))
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + getToken("doctor"))
+                .body(requestBody.toString())
+                .post("/api-appointments/" + appointmentId + "/cancel")
+                .then()
+                .statusCode(200);
+    }
+
+
+
 
 }
