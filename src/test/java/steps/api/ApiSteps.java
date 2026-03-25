@@ -25,6 +25,7 @@ public class ApiSteps extends APIUtils {
     RequestSpecification request;
     Response response;
     JSONObject requestBody = new JSONObject();
+    Appointment appointmentData = new Appointment();
 
 
     @Given("base url")
@@ -125,6 +126,27 @@ public class ApiSteps extends APIUtils {
 
         requestBody.put("datetime_start", startTime);
         requestBody.put("datetime_end", endTime);
+        request = request.body(requestBody.toString());
+
+        // this part is to reuse start and end time in other method
+        appointmentData.setDatetime_start(startTime);
+        appointmentData.setDatetime_end(endTime);
+    }
+
+    @Then("user provides conflicting date and time for appointment")
+    public void user_provides_conflicting_date_and_time_for_appointment() {
+        requestBody.put("datetime_start", appointmentData.getDatetime_start());
+        requestBody.put("datetime_end", appointmentData.getDatetime_end());
+        request = request.body(requestBody.toString());
+    }
+
+    @Given("user provides same times for start and end")
+    public void user_provides_same_times_for_start_and_end() {
+        String [] appointmentDateAndTime = getStartEndTimeForAppointment();
+        String startTime = appointmentDateAndTime[0];
+
+        requestBody.put("datetime_start", startTime);
+        requestBody.put("datetime_end", startTime);
 
         request = request.body(requestBody.toString());
     }
@@ -153,7 +175,12 @@ public class ApiSteps extends APIUtils {
                 .statusCode(200);
     }
 
+    @Then("verify {string} in response body is equal to {string}")
+    public void verify_in_response_body_is_equal_to(String key, String value) {
+        JSONObject jsonObject = new JSONObject(response.getBody().asString());
 
+        Assertions.assertEquals(value, jsonObject.get(key));
+    }
 
 
 }
